@@ -14,8 +14,12 @@ class VendorProfile(Base):
     business_address = Column(String(255), nullable=False)
     gst_number = Column(String(50), nullable=True)
 
-    status = Column(String(20), default="pending")  # pending / approved / rejected
+    status = Column(
+        String(20), default="pending", index=True
+    )  # pending / approved / rejected
+    rejection_reason = Column(String(255), nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     user = relationship("User")
