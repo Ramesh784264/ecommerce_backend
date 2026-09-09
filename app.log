@@ -11,3 +11,14 @@
 2026-09-10 01:05:44,774 - app.config.database - INFO - Database engine created successfully
 2026-09-10 01:05:58,007 - app.config.database - INFO - Database engine created successfully
 2026-09-10 01:09:03,514 - app.config.database - INFO - Database engine created successfully
+2026-09-10 01:09:15,358 - app.config.database - INFO - Database engine created successfully
+2026-09-10 01:10:46,885 - app.config.database - INFO - Database engine created successfully
+2026-09-10 01:11:17,654 - app.config.database - ERROR - Database session error: (pymysql.err.OperationalError) (1054, "Unknown column 'users.is_active' in 'field list'")
+[SQL: SELECT users.id AS users_id, users.name AS users_name, users.email AS users_email, users.password_hash AS users_password_hash, users.`role` AS users_role, users.is_verified AS users_is_verified, users.is_active AS users_is_active, users.otp_code AS users_otp_code, users.otp_expiry AS users_otp_expiry, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.email = %(email_1)s 
+ LIMIT %(param_1)s]
+[parameters: {'email_1': 'vicky@example.com', 'param_1': 1}]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-09-10 01:25:23,679 - app.config.database - INFO - Database engine created successfully
+2026-09-10 01:25:30,719 - app.config.database - INFO - Database engine created successfully
