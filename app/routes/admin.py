@@ -29,10 +29,14 @@ def approve_vendor(
     if not vendor:
         raise HTTPException(status_code=404, detail="Vendor application not found")
 
-    vendor.status = "approved"
+    if vendor.status == "approved":
+        raise HTTPException(status_code=400, detail="Vendor is already approved")
 
-    # User table-la role-ah 'vendor' nu update pannuvom
     user = db.query(User).filter(User.id == vendor.user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Associated user account not found")
+
+    vendor.status = "approved"
     user.role = "vendor"
 
     db.commit()
