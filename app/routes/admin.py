@@ -36,7 +36,7 @@ def delete_user(
 
     db.delete(user)
     db.commit()
-    return {"message": "User deleted successfully"}
+    return {"message": f"User {user.id} deleted successfully"}
 
 
 # ---------------- VIEW PENDING VENDOR REQUESTS (Admin only) ----------------

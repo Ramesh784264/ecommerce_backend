@@ -5,25 +5,34 @@ from app.config.database import get_db
 from app.models.vendor_model import VendorProfile
 from app.models.user_model import User
 from app.schemas.vendor_schema import VendorApply, VendorResponse
-from app.utils.dependencies import get_current_user, role_required
+from app.utils.dependencies import get_current_user
 
 router = APIRouter(prefix="/vendor", tags=["Vendor"])
 
 
-# ---------------- APPLY (Logged-in customer) ----------------
 @router.post("/apply", response_model=VendorResponse)
 def apply_vendor(
     data: VendorApply,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    # Already vendor-a irundhaa illa already apply pannirundhaa check pannuvom
+    # Admin ah vendor apply pannakoodathu
+    if current_user.role == "admin":
+        raise HTTPException(
+            status_code=400, detail="Admin accounts cannot apply to become a vendor"
+        )
+
+    # Already vendor-a irundha, again apply pannakoodathu
+    if current_user.role == "vendor":
+        raise HTTPException(status_code=400, detail="You are already a vendor")
+
+    # Already apply pannirundha (pending/rejected irundhalum) check pannuvom
     existing = (
         db.query(VendorProfile).filter(VendorProfile.user_id == current_user.id).first()
     )
     if existing:
         raise HTTPException(
-            status_code=400, detail="You have already applied or are a vendor"
+            status_code=400, detail="You have already applied to become a vendor"
         )
 
     new_vendor = VendorProfile(
@@ -39,7 +48,6 @@ def apply_vendor(
     return new_vendor
 
 
-# ---------------- MY STATUS (Logged-in user check own application) ----------------
 @router.get("/my-status", response_model=VendorResponse)
 def my_vendor_status(
     db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
