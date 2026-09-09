@@ -53,6 +53,24 @@ def create_product(
     return new_product
 
 
+# ---------------- COUNT (Everyone) — {product_id} route ku MUNNADI irukanum ----------------
+@router.get("/count")
+def get_products_count(
+    db: Session = Depends(get_db),
+    search: str = None,
+    category_id: int = None,
+):
+    query = db.query(Product).filter(Product.is_active == True)
+
+    if search:
+        query = query.filter(Product.name.ilike(f"%{search}%"))
+    if category_id:
+        query = query.filter(Product.category_id == category_id)
+
+    total = query.count()
+    return {"total_products": total}
+
+
 # ---------------- GET ALL (Everyone, with search/filter) ----------------
 @router.get("/", response_model=list[ProductResponse])
 def get_products(
@@ -62,7 +80,7 @@ def get_products(
     min_price: float = None,
     max_price: float = None,
 ):
-    query = db.query(Product)
+    query = db.query(Product).filter(Product.is_active == True)
 
     if search:
         query = query.filter(Product.name.ilike(f"%{search}%"))
@@ -73,7 +91,14 @@ def get_products(
     if max_price is not None:
         query = query.filter(Product.price <= max_price)
 
-    return query.all()
+    results = query.all()
+
+    if not results:
+        raise HTTPException(
+            status_code=404, detail="No products found matching your criteria"
+        )
+
+    return results
 
 
 # ---------------- GET ONE (Everyone) ----------------
