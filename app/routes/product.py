@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.config.database import get_db
 from app.models.product_model import Product
+from app.models.category_model import Category
 from app.schemas.product_schema import ProductCreate, ProductUpdate, ProductResponse
 from app.utils.dependencies import get_current_user, role_required
 
@@ -16,6 +17,23 @@ def create_product(
     db: Session = Depends(get_db),
     current_user=Depends(role_required("admin", "vendor")),
 ):
+    # Category exist pannuthaa nu check pannuvom
+    category = db.query(Category).filter(Category.id == product.category_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+
+    # Same vendor, same product name already irukka nu check pannuvom
+    existing = (
+        db.query(Product)
+        .filter(Product.name == product.name, Product.vendor_id == current_user.id)
+        .first()
+    )
+    if existing:
+        raise HTTPException(
+            status_code=400,
+            detail=f"You already have a product named '{product.name}'. Please use a different name or edit the existing product.",
+        )
+
     new_product = Product(
         name=product.name,
         description=product.description,

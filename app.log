@@ -48,3 +48,4 @@ WHERE users.email = %(email_1)s
 [SQL: INSERT INTO products (name, description, price, stock, image_url, is_active, category_id, vendor_id, updated_at) VALUES (%(name)s, %(description)s, %(price)s, %(stock)s, %(image_url)s, %(is_active)s, %(category_id)s, %(vendor_id)s, %(updated_at)s)]
 [parameters: {'name': 'iphone 16', 'description': 'least model', 'price': 55500.0, 'stock': 10, 'image_url': '1', 'is_active': 1, 'category_id': 3, 'vendor_id': 2, 'updated_at': None}]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-09-10 03:20:00,156 - app.config.database - INFO - Database engine created successfully
