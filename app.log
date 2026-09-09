@@ -22,3 +22,4 @@ WHERE users.email = %(email_1)s
 (Background on this error at: https://sqlalche.me/e/20/e3q8)
 2026-09-10 01:25:23,679 - app.config.database - INFO - Database engine created successfully
 2026-09-10 01:25:30,719 - app.config.database - INFO - Database engine created successfully
+2026-09-10 01:25:36,329 - app.config.database - INFO - Database engine created successfully
