@@ -15,8 +15,8 @@ class CategoryCreate(BaseModel):
         if not value:
             raise ValueError("Category name cannot be empty")
 
-        if len(value) < 2:
-            raise ValueError("Category name must be at least 2 characters")
+        if len(value) < 5:
+            raise ValueError("Category name must be at least 5 characters")
 
         if len(value) > 50:
             raise ValueError("Category name must be at most 50 characters")

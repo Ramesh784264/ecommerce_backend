@@ -42,8 +42,10 @@ def delete_category(
 ):
     category = db.query(Category).filter(Category.id == category_id).first()
     if not category:
-        raise HTTPException(status_code=404, detail="Category not found")
+        raise HTTPException(
+            status_code=404, detail=f"Category not found with this id {category_id}"
+        )
 
     db.delete(category)
     db.commit()
-    return {"message": "Category deleted successfully"}
+    return {"message": f"Category {category.id} deleted successfully"}
