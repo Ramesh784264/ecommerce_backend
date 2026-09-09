@@ -39,3 +39,12 @@ WHERE users.email = %(email_1)s
 2026-09-10 03:01:14,643 - app.config.database - INFO - Database engine created successfully
 2026-09-10 03:04:17,478 - app.config.database - INFO - Database engine created successfully
 2026-09-10 03:04:19,392 - app.config.database - INFO - Database engine created successfully
+2026-09-10 03:11:17,304 - app.config.database - INFO - Database engine created successfully
+2026-09-10 03:14:37,467 - app.config.database - ERROR - Database session error: (pymysql.err.IntegrityError) (1452, 'Cannot add or update a child row: a foreign key constraint fails (`ecommerce_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`))')
+[SQL: INSERT INTO products (name, description, price, stock, image_url, is_active, category_id, vendor_id, updated_at) VALUES (%(name)s, %(description)s, %(price)s, %(stock)s, %(image_url)s, %(is_active)s, %(category_id)s, %(vendor_id)s, %(updated_at)s)]
+[parameters: {'name': 'iphone 16', 'description': 'least model', 'price': 55500.0, 'stock': 10, 'image_url': '1', 'is_active': 1, 'category_id': 2, 'vendor_id': 2, 'updated_at': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-09-10 03:14:47,663 - app.config.database - ERROR - Database session error: (pymysql.err.IntegrityError) (1452, 'Cannot add or update a child row: a foreign key constraint fails (`ecommerce_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`))')
+[SQL: INSERT INTO products (name, description, price, stock, image_url, is_active, category_id, vendor_id, updated_at) VALUES (%(name)s, %(description)s, %(price)s, %(stock)s, %(image_url)s, %(is_active)s, %(category_id)s, %(vendor_id)s, %(updated_at)s)]
+[parameters: {'name': 'iphone 16', 'description': 'least model', 'price': 55500.0, 'stock': 10, 'image_url': '1', 'is_active': 1, 'category_id': 3, 'vendor_id': 2, 'updated_at': None}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
