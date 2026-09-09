@@ -11,11 +11,32 @@ from app.schemas.user_schema import UserResponse
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
 
+# get all users
 @router.get("/users", response_model=list[UserResponse])
 def get_all_users(
     db: Session = Depends(get_db), current_user=Depends(role_required("admin"))
 ):
     return db.query(User).all()
+
+
+@router.delete("/users/{user_id}")
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(role_required("admin")),
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user.id == current_user.id:
+        raise HTTPException(
+            status_code=400, detail="You cannot delete your own account"
+        )
+
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted successfully"}
 
 
 # ---------------- VIEW PENDING VENDOR REQUESTS (Admin only) ----------------
