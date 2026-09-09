@@ -49,3 +49,8 @@ WHERE users.email = %(email_1)s
 [parameters: {'name': 'iphone 16', 'description': 'least model', 'price': 55500.0, 'stock': 10, 'image_url': '1', 'is_active': 1, 'category_id': 3, 'vendor_id': 2, 'updated_at': None}]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
 2026-09-10 03:20:00,156 - app.config.database - INFO - Database engine created successfully
+2026-09-10 03:22:53,814 - app.config.database - INFO - Database engine created successfully
+2026-09-10 03:28:45,686 - app.config.database - INFO - Database engine created successfully
+2026-09-10 03:30:37,829 - app.config.database - INFO - Database engine created successfully
+2026-09-10 03:38:59,448 - app.config.database - INFO - Database engine created successfully
+2026-09-10 03:43:58,705 - app.config.database - INFO - Database engine created successfully

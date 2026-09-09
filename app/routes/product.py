@@ -22,16 +22,20 @@ def create_product(
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
 
-    # Same vendor, same product name already irukka nu check pannuvom
+    # Same vendor, same product name, same category already irukka nu check pannuvom
     existing = (
         db.query(Product)
-        .filter(Product.name == product.name, Product.vendor_id == current_user.id)
+        .filter(
+            Product.name == product.name,
+            Product.vendor_id == current_user.id,
+            Product.category_id == product.category_id,
+        )
         .first()
     )
     if existing:
         raise HTTPException(
             status_code=400,
-            detail=f"You already have a product named '{product.name}'. Please use a different name or edit the existing product.",
+            detail=f"You already have a product named '{product.name}' in this category. Please use a different name or edit the existing product.",
         )
 
     new_product = Product(
