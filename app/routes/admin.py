@@ -6,8 +6,16 @@ from app.models.vendor_model import VendorProfile
 from app.models.user_model import User
 from app.schemas.vendor_schema import VendorResponse
 from app.utils.dependencies import role_required
+from app.schemas.user_schema import UserResponse
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
+
+
+@router.get("/users", response_model=list[UserResponse])
+def get_all_users(
+    db: Session = Depends(get_db), current_user=Depends(role_required("admin"))
+):
+    return db.query(User).all()
 
 
 # ---------------- VIEW PENDING VENDOR REQUESTS (Admin only) ----------------
