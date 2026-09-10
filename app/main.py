@@ -7,6 +7,7 @@ from app.models import (
     vendor_model,
     cart_model,
     wishlist_model,
+    order_model,
 )
 from app.routes import auth, category, product, vendor, admin, cart, wishlist
 
