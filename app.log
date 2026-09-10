@@ -89,3 +89,6 @@ WHERE users.email = %(email_1)s
 2026-09-10 08:58:24,062 - app.config.database - INFO - Database engine created successfully
 2026-09-10 08:58:55,609 - app.config.database - INFO - Database engine created successfully
 2026-09-10 08:59:08,760 - app.config.database - INFO - Database engine created successfully
+2026-09-10 09:01:56,864 - app.config.database - INFO - Database engine created successfully
+2026-09-10 09:06:00,974 - app.config.database - INFO - Database engine created successfully
+2026-09-10 09:06:44,673 - app.config.database - INFO - Database engine created successfully
