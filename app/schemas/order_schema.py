@@ -77,6 +77,8 @@ class OrderResponse(BaseModel):
     user_id: int
     total_amount: float
     status: str
+    payment_status: str
+    payment_method: Optional[str] = None
     shipping_name: str
     shipping_phone: str
     shipping_address: str

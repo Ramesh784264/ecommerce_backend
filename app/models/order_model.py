@@ -15,6 +15,15 @@ class Order(Base):
         String(20), default="pending", index=True
     )  # pending / confirmed / shipped / delivered / cancelled
 
+    # Payment details (Razorpay integration ku)
+    payment_status = Column(
+        String(20), default="unpaid", index=True
+    )  # unpaid / paid / failed / refund_pending / refunded
+    payment_method = Column(String(20), nullable=True)  # razorpay / cod
+    razorpay_order_id = Column(String(100), nullable=True, index=True)
+    razorpay_payment_id = Column(String(100), nullable=True)
+    razorpay_signature = Column(String(255), nullable=True)
+
     shipping_name = Column(String(100), nullable=False)
     shipping_phone = Column(String(15), nullable=False)
     shipping_address = Column(String(255), nullable=False)

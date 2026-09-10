@@ -26,14 +26,31 @@ def apply_vendor(
     if current_user.role == "vendor":
         raise HTTPException(status_code=400, detail="You are already a vendor")
 
-    # Already apply pannirundha (pending/rejected irundhalum) check pannuvom
+    # Already apply pannirundha check pannuvom
     existing = (
         db.query(VendorProfile).filter(VendorProfile.user_id == current_user.id).first()
     )
+
     if existing:
-        raise HTTPException(
-            status_code=400, detail="You have already applied to become a vendor"
-        )
+        if existing.status == "pending":
+            raise HTTPException(
+                status_code=400,
+                detail="You already have a vendor application pending review",
+            )
+        if existing.status == "approved":
+            # Ithu edge case - role vendor-a irukkanum already, but safety-ku
+            raise HTTPException(status_code=400, detail="You are already a vendor")
+
+        # status == "rejected" -> existing profile-a reset pannu, re-apply panna anumathikkuvom
+        existing.shop_name = data.shop_name
+        existing.business_address = data.business_address
+        existing.gst_number = data.gst_number
+        existing.status = "pending"
+        existing.rejection_reason = None
+
+        db.commit()
+        db.refresh(existing)
+        return existing
 
     new_vendor = VendorProfile(
         user_id=current_user.id,

@@ -9,7 +9,7 @@ from app.models import (
     wishlist_model,
     order_model,
 )
-from app.routes import auth, category, product, vendor, admin, cart, wishlist
+from app.routes import auth, category, product, vendor, admin, cart, wishlist, order
 
 Base.metadata.create_all(bind=engine)
 
@@ -22,6 +22,7 @@ app.include_router(vendor.router)
 app.include_router(admin.router)
 app.include_router(cart.router)
 app.include_router(wishlist.router)
+app.include_router(order.router)
 
 
 @app.get("/")

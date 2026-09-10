@@ -23,10 +23,6 @@ def add_to_cart(
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    # Stock check pannuvom
-    if product.stock < item.quantity:
-        raise HTTPException(status_code=400, detail="Not enough stock available")
-
     # Already cart-la iruka product-a nu check pannuvom
     existing_item = (
         db.query(CartItem)
@@ -36,9 +32,25 @@ def add_to_cart(
         .first()
     )
 
+    # Cart-la already irukkura quantity-yum, pudhusa add panra quantity-yum
+    # sethu (combined) stock check pannuvom - illana stock mela order aagum
+    current_qty_in_cart = existing_item.quantity if existing_item else 0
+    total_requested_qty = current_qty_in_cart + item.quantity
+
+    if product.stock < total_requested_qty:
+        available_to_add = max(product.stock - current_qty_in_cart, 0)
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Not enough stock available. In stock: {product.stock}, "
+                f"already in your cart: {current_qty_in_cart}, "
+                f"you can add up to {available_to_add} more."
+            ),
+        )
+
     if existing_item:
         # Already irukkuna quantity add pannuvom
-        existing_item.quantity += item.quantity
+        existing_item.quantity = total_requested_qty
         db.commit()
         db.refresh(existing_item)
         return existing_item
@@ -80,6 +92,17 @@ def update_cart_item(
 
     if data.quantity <= 0:
         raise HTTPException(status_code=400, detail="Quantity must be at least 1")
+
+    # Product current stock-ku etthiraga update panra quantity check pannuvom
+    product = db.query(Product).filter(Product.id == item.product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    if product.stock < data.quantity:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Not enough stock available. In stock: {product.stock}",
+        )
 
     item.quantity = data.quantity
     db.commit()

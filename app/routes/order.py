@@ -1,4 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Optional
+from datetime import date, datetime, time
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.config.database import get_db
@@ -55,6 +58,8 @@ def checkout(
         user_id=current_user.id,
         total_amount=total_amount,
         status="pending",
+        payment_status="unpaid",
+        payment_method="cod",  # Razorpay integrate pannumbothu verify-payment route indha field ah "razorpay" nu update pannum
         shipping_name=data.shipping_name,
         shipping_phone=data.shipping_phone,
         shipping_address=data.shipping_address,
@@ -90,12 +95,17 @@ def checkout(
 # ---------------- MY ORDERS (Customer) ----------------
 @router.get("/my-orders", response_model=list[OrderResponse])
 def get_my_orders(
-    db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     return (
         db.query(Order)
         .filter(Order.user_id == current_user.id)
         .order_by(Order.created_at.desc())
+        .offset(skip)
+        .limit(limit)
         .all()
     )
 
@@ -147,6 +157,12 @@ def cancel_order(
             product.stock += item.quantity
 
     order.status = "cancelled"
+
+    # Order ku already payment aagi irundha, refund pending nu mark pannuvom
+    # (Actual refund - Razorpay Refunds API vachi separate ah trigger pannanum)
+    if order.payment_status == "paid":
+        order.payment_status = "refund_pending"
+
     db.commit()
     return {"message": "Order cancelled successfully"}
 
@@ -154,9 +170,31 @@ def cancel_order(
 # ---------------- ALL ORDERS (Admin only) ----------------
 @router.get("/", response_model=list[OrderResponse])
 def get_all_orders(
-    db: Session = Depends(get_db), current_user: User = Depends(role_required("admin"))
+    status: Optional[str] = Query(None, description="Filter by order status"),
+    payment_status: Optional[str] = Query(None, description="Filter by payment status"),
+    from_date: Optional[date] = Query(
+        None, description="Orders created on/after this date"
+    ),
+    to_date: Optional[date] = Query(
+        None, description="Orders created on/before this date"
+    ),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(role_required("admin")),
 ):
-    return db.query(Order).order_by(Order.created_at.desc()).all()
+    query = db.query(Order)
+
+    if status:
+        query = query.filter(Order.status == status)
+    if payment_status:
+        query = query.filter(Order.payment_status == payment_status)
+    if from_date:
+        query = query.filter(Order.created_at >= datetime.combine(from_date, time.min))
+    if to_date:
+        query = query.filter(Order.created_at <= datetime.combine(to_date, time.max))
+
+    return query.order_by(Order.created_at.desc()).offset(skip).limit(limit).all()
 
 
 # ---------------- UPDATE STATUS (Admin/Vendor) ----------------
