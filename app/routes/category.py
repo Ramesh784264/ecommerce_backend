@@ -65,6 +65,9 @@ def update_category(
 
 
 # ---------------- DELETE (Admin only) ----------------
+from app.models.product_model import Product
+
+
 @router.delete("/{category_id}")
 def delete_category(
     category_id: int,
@@ -75,6 +78,16 @@ def delete_category(
     if not category:
         raise HTTPException(
             status_code=404, detail=f"Category not found with this id {category_id}"
+        )
+
+    # Idhu category la products irukka nu check pannuvom
+    products_count = (
+        db.query(Product).filter(Product.category_id == category_id).count()
+    )
+    if products_count > 0:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot delete category. {products_count} product(s) are linked to this category. Please delete or reassign those products first.",
         )
 
     db.delete(category)

@@ -57,3 +57,29 @@ WHERE users.email = %(email_1)s
 2026-09-10 03:48:14,749 - app.config.database - INFO - Database engine created successfully
 2026-09-10 04:14:01,122 - app.config.database - INFO - Database engine created successfully
 2026-09-10 04:18:24,192 - app.config.database - INFO - Database engine created successfully
+2026-09-10 04:19:54,743 - app.config.database - INFO - Database engine created successfully
+2026-09-10 04:21:30,679 - app.config.database - INFO - Database engine created successfully
+2026-09-10 04:21:42,997 - app.config.database - INFO - Database engine created successfully
+2026-09-10 04:23:51,076 - app.config.database - ERROR - Database session error: (pymysql.err.IntegrityError) (1451, 'Cannot delete or update a parent row: a foreign key constraint fails (`ecommerce_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`))')
+[SQL: DELETE FROM categories WHERE categories.id = %(id)s]
+[parameters: {'id': 5}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-09-10 04:24:07,029 - app.config.database - ERROR - Database session error: (pymysql.err.IntegrityError) (1451, 'Cannot delete or update a parent row: a foreign key constraint fails (`ecommerce_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`))')
+[SQL: DELETE FROM categories WHERE categories.id = %(id)s]
+[parameters: {'id': 5}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-09-10 04:24:16,611 - app.config.database - ERROR - Database session error: (pymysql.err.IntegrityError) (1451, 'Cannot delete or update a parent row: a foreign key constraint fails (`ecommerce_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`))')
+[SQL: DELETE FROM categories WHERE categories.id = %(id)s]
+[parameters: {'id': 5}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-09-10 04:24:57,739 - app.config.database - ERROR - Database session error: (pymysql.err.IntegrityError) (1451, 'Cannot delete or update a parent row: a foreign key constraint fails (`ecommerce_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`))')
+[SQL: DELETE FROM categories WHERE categories.id = %(id)s]
+[parameters: {'id': 5}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-09-10 04:25:44,489 - app.config.database - ERROR - Database session error: (pymysql.err.IntegrityError) (1451, 'Cannot delete or update a parent row: a foreign key constraint fails (`ecommerce_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`))')
+[SQL: DELETE FROM categories WHERE categories.id = %(id)s]
+[parameters: {'id': 5}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-09-10 04:30:14,388 - app.config.database - INFO - Database engine created successfully
+2026-09-10 08:45:14,375 - app.config.database - INFO - Database engine created successfully
+2026-09-10 08:45:29,483 - app.config.database - INFO - Database engine created successfully

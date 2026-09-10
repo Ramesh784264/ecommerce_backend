@@ -46,6 +46,35 @@ class CategoryCreate(BaseModel):
         return value if value else None
 
 
+class CategoryUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, value):
+        if value is None:
+            return value
+        value = value.strip()
+        if len(value) < 2:
+            raise ValueError("Category name must be at least 2 characters")
+        if len(value) > 50:
+            raise ValueError("Category name must be at most 50 characters")
+        if value.isdigit():
+            raise ValueError("Category name cannot be only numbers")
+        return value.title()
+
+    @field_validator("description")
+    @classmethod
+    def validate_description(cls, value):
+        if value is None:
+            return value
+        value = value.strip()
+        if value and len(value) < 5:
+            raise ValueError("Description must be at least 5 characters if provided")
+        return value if value else None
+
+
 class CategoryResponse(BaseModel):
     id: int
     name: str
