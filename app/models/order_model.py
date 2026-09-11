@@ -11,6 +11,7 @@ class Order(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     total_amount = Column(Numeric(10, 2), nullable=False)
+    discount_amount = Column(Numeric(10, 2), default=0.00)  # Coupon discount applied
     status = Column(
         String(20), default="pending", index=True
     )  # pending / confirmed / shipped / delivered / cancelled

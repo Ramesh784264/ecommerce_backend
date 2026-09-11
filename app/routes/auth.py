@@ -40,6 +40,10 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     if not db_user:
         raise HTTPException(status_code=400, detail="Invalid email or password")
 
+    # Check account is active (not banned/soft-deleted)
+    if not db_user.is_active:
+        raise HTTPException(status_code=403, detail="Your account has been deactivated")
+
     # Password correct-a nu check pannuvom
     if not verify_password(user.password, db_user.password_hash):
         raise HTTPException(status_code=400, detail="Invalid email or password")

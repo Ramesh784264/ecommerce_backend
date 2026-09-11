@@ -84,6 +84,13 @@ def move_to_cart(
     if not wishlist_item:
         raise HTTPException(status_code=404, detail="Wishlist item not found")
 
+    # Validate stock before moving to cart
+    product = db.query(Product).filter(Product.id == wishlist_item.product_id).first()
+    if not product or not product.is_active:
+        raise HTTPException(status_code=400, detail="Product is no longer available")
+    if product.stock < 1:
+        raise HTTPException(status_code=400, detail=f"'{product.name}' is out of stock")
+
     cart_item = (
         db.query(CartItem)
         .filter(
@@ -94,6 +101,11 @@ def move_to_cart(
     )
 
     if cart_item:
+        if product.stock < cart_item.quantity + 1:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Not enough stock. Only {product.stock} left and you already have {cart_item.quantity} in cart.",
+            )
         cart_item.quantity += 1
     else:
         cart_item = CartItem(

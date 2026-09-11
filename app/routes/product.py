@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -6,6 +7,7 @@ from app.models.product_model import Product
 from app.models.category_model import Category
 from app.schemas.product_schema import ProductCreate, ProductUpdate, ProductResponse
 from app.utils.dependencies import get_current_user, role_required
+from app.utils.ws_manager import ws_manager
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -71,7 +73,7 @@ def get_products_count(
     return {"total_products": total}
 
 
-# ---------------- GET ALL (Everyone, with search/filter) ----------------
+# ---------------- GET ALL (Everyone, with search/filter/pagination) ----------------
 @router.get("/", response_model=list[ProductResponse])
 def get_products(
     db: Session = Depends(get_db),
@@ -79,6 +81,8 @@ def get_products(
     category_id: int = None,
     min_price: float = None,
     max_price: float = None,
+    skip: int = 0,
+    limit: int = 20,
 ):
     query = db.query(Product).filter(Product.is_active == True)
 
@@ -91,14 +95,8 @@ def get_products(
     if max_price is not None:
         query = query.filter(Product.price <= max_price)
 
-    results = query.all()
-
-    if not results:
-        raise HTTPException(
-            status_code=404, detail="No products found matching your criteria"
-        )
-
-    return results
+    # Return empty list (not 404) when no products match — correct REST semantics
+    return query.offset(skip).limit(limit).all()
 
 
 # ---------------- GET ONE (Everyone) ----------------
@@ -128,12 +126,37 @@ def update_product(
             status_code=403, detail="You can only edit your own products"
         )
 
-    update_data = product_data.dict(exclude_unset=True)
+    update_data = product_data.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(product, key, value)
 
     db.commit()
     db.refresh(product)
+
+    # ── Real-time WebSocket stock update ──────────────────────
+    if "stock" in update_data:
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                asyncio.ensure_future(ws_manager.broadcast({
+                    "type": "stock_update",
+                    "data": {
+                        "product_id": product.id,
+                        "stock": product.stock,
+                    }
+                }))
+                if product.stock <= 5:
+                    asyncio.ensure_future(ws_manager.broadcast_admins({
+                        "type": "low_stock_alert",
+                        "data": {
+                            "product_id": product.id,
+                            "product_name": product.name,
+                            "stock": product.stock,
+                        }
+                    }))
+        except Exception:
+            pass
+
     return product
 
 
@@ -153,6 +176,8 @@ def delete_product(
             status_code=403, detail="You can only delete your own products"
         )
 
-    db.delete(product)
+    # Soft-delete: set is_active = False instead of hard deletion.
+    # This preserves referential integrity with existing order_items.
+    product.is_active = False
     db.commit()
     return {"message": "Product deleted successfully"}

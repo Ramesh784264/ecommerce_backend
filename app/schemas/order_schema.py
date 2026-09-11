@@ -11,6 +11,7 @@ class CheckoutRequest(BaseModel):
     shipping_address: str
     shipping_city: str
     shipping_pincode: str
+    coupon_code: Optional[str] = None  # Optional coupon at checkout
 
     @field_validator("shipping_name")
     @classmethod
@@ -76,6 +77,7 @@ class OrderResponse(BaseModel):
     id: int
     user_id: int
     total_amount: float
+    discount_amount: Optional[float] = 0.0   # Coupon discount applied
     status: str
     payment_status: str
     payment_method: Optional[str] = None

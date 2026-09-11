@@ -99,3 +99,25 @@ WHERE users.email = %(email_1)s
 2026-09-10 09:45:20,910 - app.config.database - INFO - Database engine created successfully
 2026-09-10 09:45:46,569 - app.config.database - INFO - Database engine created successfully
 2026-09-10 09:46:10,176 - app.config.database - INFO - Database engine created successfully
+2026-09-10 20:57:04,451 - app.config.database - INFO - Database engine created successfully
+2026-09-10 20:57:52,326 - app.config.database - INFO - Database engine created successfully
+2026-09-10 20:58:03,090 - app.config.database - INFO - Database engine created successfully
+2026-09-10 20:58:11,304 - app.config.database - INFO - Database engine created successfully
+2026-09-10 20:58:18,805 - app.config.database - INFO - Database engine created successfully
+2026-09-10 21:00:43,300 - app.config.database - INFO - Database engine created successfully
+2026-09-10 21:00:50,275 - app.config.database - INFO - Database engine created successfully
+2026-09-10 21:00:56,704 - app.config.database - INFO - Database engine created successfully
+2026-09-10 21:01:17,639 - app.config.database - INFO - Database engine created successfully
+2026-09-10 21:01:41,200 - app.config.database - INFO - Database engine created successfully
+2026-09-10 21:01:41,388 - app.main - INFO - [STARTUP] E-Commerce API starting up...
+2026-09-10 21:01:41,419 - app.main - INFO - [SUCCESS] Database tables verified/created
+2026-09-10 21:03:33,291 - app.config.database - INFO - Database engine created successfully
+2026-09-10 21:03:33,488 - app.main - INFO - [STARTUP] E-Commerce API starting up...
+2026-09-10 21:03:33,503 - app.main - INFO - [SUCCESS] Database tables verified/created
+2026-09-11 22:18:19,286 - app.config.database - INFO - Database engine created successfully
+2026-09-11 22:18:20,187 - app.main - INFO - [STARTUP] E-Commerce API starting up...
+2026-09-11 22:18:20,420 - app.main - INFO - [SUCCESS] Database tables verified/created
+2026-09-11 22:24:58,040 - app.routes.payment - WARNING - Webhook received with invalid signature — rejected
+2026-09-11 22:25:28,747 - app.utils.otp - INFO - OTP generated for user_id=2 (expires in 10 min)
+2026-09-11 22:25:32,008 - app.utils.email_utils - ERROR - SMTP auth failed — check SMTP_USER and SMTP_PASSWORD in .env
+2026-09-11 22:25:32,008 - app.routes.otp - INFO - Verification OTP sent to Ramesh@example.com
